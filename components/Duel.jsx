@@ -20,19 +20,7 @@ const RulesWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  width: 100vw;
-  margin-bottom: 1em;
-  p,
-  pre,
-  div {
-    margin: 0;
-  }
-  span {
-    font-size: 30px;
-  }
-  code {
-    font-size: 30px;
-  }
+  width: 60%;
 `;
 
 const StyledRule = styled.div`
@@ -45,6 +33,9 @@ const StyledRule = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  & > * {
+    margin-bottom: 30px !important;
+  }
   ${({ winner }) =>
     winner &&
     `
@@ -55,17 +46,52 @@ const StyledRule = styled.div`
 const TargetWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-direction: column;
+  justify-content: center;
+  flex-direction: row;
+  width: 100vw;
+  & > *:not(last-child) {
+    margin-right: 100px !important;
+  }
+`;
+
+const TargetRender = styled.section`
+  position: relative;
+  background-color: white;
+  color: black;
+  width: 300px;
+  height: 300px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  border-radius: 10px;
+  label {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    color: black
+    font-size: 20px;
+  }
 `;
 
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   flex-direction: column;
   width: 100vw;
   height: 100vh;
+  p,
+  pre,
+  div,
+  h1 {
+    margin: 0;
+  }
+  span {
+    font-size: 30px;
+  }
+  code {
+    font-size: 30px;
+  }
 `;
 
 const Code = styled(SyntaxHighlighter)`
@@ -87,8 +113,8 @@ const Duel = ({
   const ruleBSpec = calculate(ruleB[0])[0].specificityArray.slice(1);
   let winner;
   if (answer) {
-    const ruleASpecVal = parseInt(ruleASpec.join());
-    const ruleBSpecVal = parseInt(ruleBSpec.join());
+    const ruleASpecVal = parseInt(ruleASpec.join(""));
+    const ruleBSpecVal = parseInt(ruleBSpec.join(""));
     winner = ruleASpecVal > ruleBSpecVal ? "a" : "b";
   }
 
@@ -96,36 +122,43 @@ const Duel = ({
   return (
     <Wrapper>
       <h1> CSS Rule Duel</h1>
+
       <Stutter>
+        <TargetWrapper>
+          <Code language="html">{targetString}</Code>
+          <TargetRender>
+            <label>{answer ? "After styles" : "Before styles"}</label>
+            {target}
+          </TargetRender>
+        </TargetWrapper>
         <RulesWrapper>
-          <StyledRule>
+          <StyledRule winner={winner === "a"}>
             {winner === "a" && <WinnerTrophy />}
-            <p>Rule A:</p>
+            <p>Rule A</p>
             <Code language="css">{ruleAString}</Code>
             {displaySpec && <Spec array={ruleASpec} />}
           </StyledRule>
-
+          <h2>VS.</h2>
           <StyledRule winner={winner === "b"}>
             {winner === "b" && <WinnerTrophy />}
-            <p>Rule B:</p>
+            <p>Rule B</p>
             <Code language="css">{ruleBString}</Code>
             {displaySpec && <Spec array={ruleBSpec} />}
           </StyledRule>
         </RulesWrapper>
-        <TargetWrapper>
-          <Code language="javascript">{targetString}</Code>
-        </TargetWrapper>
-      </Stutter>
-      {answer && (
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-              ${ruleAString}
-              ${ruleBString}
+        {answer && (
+          <Fragment>
+            <style
+              dangerouslySetInnerHTML={{
+                __html: `
+              section > ${ruleAString}
+              section > ${ruleBString}
             `
-          }}
-        />
-      )}
+              }}
+            />
+          </Fragment>
+        )}
+      </Stutter>
     </Wrapper>
   );
 };

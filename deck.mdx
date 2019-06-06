@@ -1,9 +1,11 @@
 import {dark} from '@mdx-deck/themes'
 import Duel from './components/Duel';
 import SpecCalc from './components/SpecCalc';
-import { Box } from 'rebass';
+import Spec from './components/Spec';
 import {Image} from 'mdx-deck';
+import SyntaxHighlighter from 'react-syntax-highlighter';
 import { Split, Horizontal, SplitRight } from 'mdx-deck/layouts'
+import styled from 'styled-components';
 const customTheme = {
   Slide: {
     padding: '30px',
@@ -15,38 +17,60 @@ const customTheme = {
 }
 export const themes = [dark, customTheme];
 
-http://www.richfinelli.com/wp-content/uploads/2015/12/specificity.png
-
-http://newmanix.com/mike/sccc.premiumdw.com/css-rule-628x235.png
 # CSS Specificity
+How Conflicting Styles Are Settled
 
 ---
 
-# Which CSS Rule Will Win?
+## Anatomy of a CSS Rule
+![](./assets/css-anatomy.png)
 
 ---
 
-<SpecCalc />
+<Image size="50%" src="./assets/conflict.png"/>
+
+---
+
+# Test
 
 ---
 
 <Duel
-  ruleA={['.red', 'background-color: red;']}
-  ruleB={['#blue', 'background-color: blue']}
+  ruleA={['.firebrick', 'color: firebrick;']}
+  ruleB={['#chartreuse', 'color: chartreuse;']}
   stutter
-  target={<Box id="blue" className="red">Hello</Box>}
-  targetString='<div id="blue" class="red">Hello</div>'
+  target={<div id="chartreuse" className="firebrick">Howdy!</div>}
+  targetString='<div id="chartreuse" class="firebrick">Howdy!</div>'
 />
 
 ---
 
 <Duel
-  ruleA={['.red', 'background-color: red;']}
-  ruleB={['#blue', 'background-color: blue']}
-  displaySpec
+  ruleA={['.firebrick', 'color: firebrick;']}
+  ruleB={['#chartreuse', 'color: chartreuse;']}
   answer
-  target={<Box id="blue" className="red">Hello</Box>}
-  targetString='<div id="blue" class="red">Hello</div>'
+  target={<div id="chartreuse" className="firebrick">Howdy!</div>}
+  targetString='<div id="chartreuse" class="firebrick">Howdy!</div>'
+/>
+
+---
+
+<Duel
+  ruleA={['.peachpuff', 'background-color: peachpuff;']}
+  ruleB={['div', 'background-color: tomato;']}
+  stutter
+  target={<div className="peachpuff">Howdy!</div>}
+  targetString='<div class="peachpuff">Howdy!</div>'
+/>
+
+---
+
+<Duel
+  ruleA={['.peachpuff', 'background-color: peachpuff;']}
+  ruleB={['div', 'background-color: tomato;']}
+  answer
+  target={<div className="peachpuff">Howdy!</div>}
+  targetString='<div class="peachpuff">Howdy!</div>'
 />
 
 ---
@@ -58,3 +82,113 @@ and, therefore, will be applied.
 Source: [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity)
 
 ---
+
+<SpecCalc />
+
+---
+
+# Exceptions to Specifity Calculations
+
+---
+# Inline Styles
+
+  ```html
+    <div style="color: tomato"></div>
+  ```
+  Is more specific than
+  <Spec array={['∞','∞','∞']} />
+
+---
+
+# `!important`
+
+  `!important` is more specific than inline styles
+
+  There are very few good reasons to use this CSS rule.
+
+  ![](./assets/important.jpg)
+
+---
+<Duel
+  ruleA={['.firebrick', 'color: firebrick;']}
+  ruleB={['#chartreuse', 'color: chartreuse;']}
+  stutter
+  target={<div id="chartreuse" className="firebrick">Howdy!</div>}
+  targetString='<div id="chartreuse" class="firebrick">Howdy!</div>'
+/>
+
+---
+
+<Duel
+  ruleA={['.firebrick', 'color: firebrick;']}
+  ruleB={['#chartreuse', 'color: chartreuse;']}
+  displaySpec
+  answer
+  target={<div id="chartreuse" className="firebrick">Howdy!</div>}
+  targetString='<div id="chartreuse" class="firebrick">Howdy!</div>'
+/>
+
+---
+
+<Duel
+  ruleA={['.peachpuff', 'background-color: peachpuff;']}
+  ruleB={['div', 'background-color: tomato;']}
+  stutter
+  target={<div className="peachpuff">Howdy!</div>}
+  targetString='<div class="peachpuff">Howdy!</div>'
+/>
+
+---
+
+<Duel
+  ruleA={['.peachpuff', 'background-color: peachpuff;']}
+  ruleB={['div', 'background-color: tomato;']}
+  answer
+  displaySpec
+  target={<div className="peachpuff">Howdy!</div>}
+  targetString='<div class="peachpuff">Howdy!</div>'
+/>
+
+---
+
+<Duel
+  ruleA={['div.huge.so-big.you-wont-believe', 'font-size: 200px;']}
+  ruleB={['div#smoll', 'font-size: 5px;']}
+  stutter
+  target={<div className="huge so-big you-wont-believe" id="smoll">Howdy!</div>}
+  targetString='<div class="huge so-big you-wont-believe" id="smoll">Howdy!</div>'
+/>
+
+---
+
+<Duel
+  ruleA={['div.huge.so-big.you-wont-believe', 'font-size: 200px;']}
+  ruleB={['div#smoll', 'font-size: 5px;']}
+  answer
+  displaySpec
+  target={<div className="huge so-big you-wont-believe" id="smoll">Howdy!</div>}
+  targetString='<div class="huge so-big you-wont-believe" id="smoll">Howdy!</div>'
+/>
+
+---
+
+# tl;dr
+If a CSS rule is being overwritten when it shouldn't:
+
+Throw in an `!important` and go home.
+
+---
+
+# JK
+
+---
+
+# Actual tl;dr
+
+If a CSS rule is being overwritten when it shouldn't:
+
+Calculate the selector's specificity and adjust before resorting to `!important`.
+
+---
+
+# Thanks

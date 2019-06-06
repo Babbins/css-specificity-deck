@@ -10,15 +10,15 @@ const Node = styled.div`
 const data = [
   {
     color: "navy",
-    label: "ID"
+    label: "IDs"
   },
   {
     color: "salmon",
-    label: "Class"
+    label: "Classes, Attributes, or Psuedoclasses"
   },
   {
     color: "teal",
-    label: "Element"
+    label: "Elements or PsuedoElements"
   }
 ];
 
