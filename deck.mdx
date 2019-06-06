@@ -1,0 +1,60 @@
+import {dark} from '@mdx-deck/themes'
+import Duel from './components/Duel';
+import SpecCalc from './components/SpecCalc';
+import { Box } from 'rebass';
+import {Image} from 'mdx-deck';
+import { Split, Horizontal, SplitRight } from 'mdx-deck/layouts'
+const customTheme = {
+  Slide: {
+    padding: '30px',
+    fontSize: '30px',
+  },
+  code: {
+    color: 'inherit',
+  }
+}
+export const themes = [dark, customTheme];
+
+http://www.richfinelli.com/wp-content/uploads/2015/12/specificity.png
+
+http://newmanix.com/mike/sccc.premiumdw.com/css-rule-628x235.png
+# CSS Specificity
+
+---
+
+# Which CSS Rule Will Win?
+
+---
+
+<SpecCalc />
+
+---
+
+<Duel
+  ruleA={['.red', 'background-color: red;']}
+  ruleB={['#blue', 'background-color: blue']}
+  stutter
+  target={<Box id="blue" className="red">Hello</Box>}
+  targetString='<div id="blue" class="red">Hello</div>'
+/>
+
+---
+
+<Duel
+  ruleA={['.red', 'background-color: red;']}
+  ruleB={['#blue', 'background-color: blue']}
+  displaySpec
+  answer
+  target={<Box id="blue" className="red">Hello</Box>}
+  targetString='<div id="blue" class="red">Hello</div>'
+/>
+
+---
+
+Specificity is the means by which browsers decide which
+CSS property values are the most relevant to an element
+and, therefore, will be applied.
+
+Source: [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity)
+
+---
